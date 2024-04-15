@@ -40,12 +40,32 @@
 
     ];
     
-    var_dump($hotels);
+    //var_dump($hotels);
     
     //stampo le info degli hotel (per ogni hotel stampo il suo nome, descrizione, se ha parcheggio, il voto e la distanza dal centro)
     foreach($hotels as $hotel){
         echo $hotel["name"] . "<br>" . $hotel["description"] . "<br>" . ($hotel["parking"] == 'true' ? "yes" : "no") . "<br>" . $hotel["vote"] . "/5" . "<br>" . $hotel["distance_to_center"] . "<br>" . "<br>";
     }
+
+    //recupero il dato col filtro scelto dall'utente
+    $userParkingChoice = $_GET["parking_filter"];
+    var_dump($userParkingChoice);
+
+    //mi serve un nuovo array da mostrare coi risultati filtrati
+    $filtered_hotels = [];
+
+    //devo controllare se l'utente ha scelto qualcosa
+    //se l'utente ha scelto, controllo: se l'utente ha scelto l'opzione con "parking", allora vuole l'hotel col parcheggio (true), altrimenti false
+    //per ogni hotel, 
+    if(!empty($userParkingChoice)){
+        $hasParking = $userParkingChoice === 'parking' ? true : false;
+        foreach($hotels as $hotel){
+            if($hasParking === $hotel["parking"]){
+                $filtered_hotels[] = $hotel;
+            }
+        };
+        $hotels = $filtered_hotels;
+    };
     
 ?>
 
@@ -63,8 +83,19 @@
 
 
     <div class="container">
+
+        <!-- parking filter -->
+        <form action="" method="get">
+            <select class="form-select" id="parking_filter" name="parking_filter">
+                <option selected value="">Select parking filter</option>
+                <option value="parking">Parking</option>
+                <option value="no-parking">No-parking</option>                
+            </select>
+            <button type="submit">Filtra</button>
+        </form>
         
-        <table class="table table-primary">
+        <!-- table -->
+        <table class="table">
             <thead>                
                 <tr>
                     <th scope="col">Name</th>
